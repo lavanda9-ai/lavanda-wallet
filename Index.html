@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#101014">
+<title>Lavanda Wallet — Prototype</title>
+<style>
+:root{--bg:#101014;--panel:#1a1921;--panel2:#22202b;--text:#f8f6ff;--muted:#a7a2b5;--lav:#b79aff;--lav2:#8d68f5;--green:#8fe0bd;--line:#302c3b}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 90% 0%,#302044 0%,transparent 38%),var(--bg);color:var(--text);font:15px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;min-height:100vh}
+button,select{font:inherit}button{cursor:pointer}.app{max-width:480px;margin:0 auto;min-height:100vh;padding:20px 18px 100px}
+.top{display:flex;align-items:center;justify-content:space-between;margin:4px 0 24px}.brand{display:flex;align-items:center;gap:10px}.logo{width:42px;height:42px;border-radius:15px;background:linear-gradient(145deg,#d8c5ff,#8d68f5);display:grid;place-items:center;color:#221638;font-size:24px;font-weight:900;box-shadow:0 7px 24px #8d68f544}.brand h1{font-size:19px;margin:0;letter-spacing:.2px}.brand small{color:var(--muted);display:block;font-size:11px;margin-top:1px}.round{border:1px solid var(--line);background:var(--panel);color:var(--text);width:42px;height:42px;border-radius:15px;font-size:19px}
+.networkrow{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;color:var(--muted);font-size:12px}.network{background:#252130;color:#e4d8ff;border:1px solid #46365f;padding:8px 12px;border-radius:12px;outline:none}
+.balance{border:1px solid #46375e;border-radius:26px;padding:22px;background:linear-gradient(135deg,#302340,#201c2b 55%,#191720);position:relative;overflow:hidden}.balance:after{content:"";position:absolute;width:170px;height:170px;border-radius:50%;right:-70px;top:-80px;background:#b79aff18}.label{color:#c3bbd2;font-size:13px}.amountrow{display:flex;align-items:center;gap:10px;margin:7px 0 4px}.amount{font-size:34px;letter-spacing:-1.3px;font-weight:750}.eye{border:0;background:transparent;color:#d6c7ff;font-size:18px}.change{font-size:12px;color:var(--green)}.demo{font-size:10px;letter-spacing:.8px;color:#d8c8ff;background:#51406466;border:1px solid #6a5280;padding:5px 8px;border-radius:8px;display:inline-block;margin-top:15px}
+.actions{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:19px 0 24px}.action{border:0;background:transparent;color:var(--text);display:flex;align-items:center;flex-direction:column;gap:7px;font-size:12px}.action .circle{height:52px;width:52px;border-radius:18px;background:var(--panel2);border:1px solid var(--line);display:grid;place-items:center;font-size:22px;color:var(--lav)}
+.sectionhead{display:flex;justify-content:space-between;align-items:center;margin:20px 0 12px}.sectionhead h2{font-size:17px;margin:0}.link{background:transparent;border:0;color:var(--lav);font-size:12px}
+.assets{display:flex;flex-direction:column;gap:9px}.asset{display:flex;align-items:center;padding:13px;background:var(--panel);border:1px solid #282532;border-radius:18px;gap:12px}.coin{width:43px;height:43px;border-radius:50%;display:grid;place-items:center;font-size:19px;font-weight:800;flex-shrink:0}.sol{background:#29243b;color:#c8b2ff}.eth{background:#25354b;color:#a7c7ff}.btc{background:#49321e;color:#ffcb83}.usdc{background:#183b45;color:#8ce4ed}.coinname{font-weight:650}.coinsub{font-size:12px;color:var(--muted);margin-top:2px}.assetvalue{margin-left:auto;text-align:right;font-weight:650}.assetvalue small{display:block;font-weight:400;color:var(--muted);font-size:12px;margin-top:3px}
+.note{margin-top:18px;color:#aaa3b8;font-size:11px;line-height:1.5;padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:#17161d}
+.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(480px,100%);padding:10px 18px calc(10px + env(safe-area-inset-bottom));background:#141319f2;backdrop-filter:blur(14px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);z-index:4}.nav button{background:transparent;border:0;color:#817b8d;display:flex;align-items:center;gap:4px;flex-direction:column;font-size:10px;padding:4px}.nav button span{font-size:19px}.nav button.active{color:var(--lav)}
+.panel{display:none}.panel.active{display:block}.empty{padding:28px 15px;text-align:center;background:var(--panel);border:1px solid var(--line);border-radius:18px;color:var(--muted);font-size:13px}
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#e9ddff;color:#251638;padding:12px 16px;border-radius:14px;box-shadow:0 8px 30px #0007;width:max-content;max-width:90%;font-size:13px;display:none;z-index:10}
+@media(min-width:520px){body{padding:18px 0}.app{border:1px solid #24212d;border-radius:28px;min-height:calc(100vh - 36px)}.nav{bottom:18px;border-radius:0 0 28px 28px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="brand"><div class="logo">L</div><div><h1>Lavanda Wallet</h1><small>Your crypto, your control</small></div></div>
+    <button class="round" aria-label="Notifikasi" onclick="toast('Notifikasi belum diaktifkan di prototipe.')">♧</button>
+  </header>
+  <main>
+    <section id="home" class="panel active">
+      <div class="networkrow"><span>Jaringan aktif</span>
+        <select class="network" id="network" aria-label="Pilih jaringan" onchange="changeNetwork()">
+          <option value="Solana">◎ Solana</option><option value="Ethereum">◆ Ethereum</option><option value="BNB Chain">◆ BNB Chain</option><option value="Polygon">⬡ Polygon</option>
+        </select>
+      </div>
+      <div class="balance">
+        <div class="label">Total portfolio value</div>
+        <div class="amountrow"><div class="amount" id="amount">Rp 12.845.000</div><button class="eye" onclick="toggleBalance()" id="eye" aria-label="Sembunyikan saldo">◉</button></div>
+        <div class="change">↗ +2,48% <span style="color:#aaa3b8">24 jam · data contoh</span></div>
+        <div class="demo">● PROTOTYPE · BUKAN SALDO ASLI</div>
+      </div>
+      <div class="actions">
+        <button class="action" onclick="toast('Receive akan tersedia setelah wallet sungguhan terintegrasi.')"><span class="circle">↓</span>Receive</button>
+        <button class="action" onclick="toast('Send dinonaktifkan. Prototipe ini tidak mengirim crypto.')"><span class="circle">↑</span>Send</button>
+        <button class="action" onclick="toast('Swap akan ditambahkan setelah integrasi aman tersedia.')"><span class="circle">⇄</span>Swap</button>
+        <button class="action" onclick="showPanel('activity')"><span class="circle">◷</span>Activity</button>
+      </div>
+      <div class="sectionhead"><h2>Your assets</h2><button class="link" onclick="showPanel('assets')">See all →</button></div>
+      <div class="assets">
+        <div class="asset"><div class="coin sol">◎</div><div><div class="coinname">Solana</div><div class="coinsub">SOL · Solana</div></div><div class="assetvalue">Rp 5.760.000<small>12 SOL</small></div></div>
+        <div class="asset"><div class="coin eth">◆</div><div><div class="coinname">Ethereum</div><div class="coinsub">ETH · Ethereum</div></div><div class="assetvalue">Rp 4.085.000<small>0,01 ETH</small></div></div>
+        <div class="asset"><div class="coin btc">₿</div><div><div class="coinname">Bitcoin</div><div class="coinsub">BTC · Bitcoin</div></div><div class="assetvalue">Rp 2.500.000<small>0,0002 BTC</small></div></div>
+        <div class="asset"><div class="coin usdc">$</div><div><div class="coinname">USD Coin</div><div class="coinsub">USDC · Multi-chain</div></div><div class="assetvalue">Rp 500.000<small>30 USDC</small></div></div>
+      </div>
+      <div class="note">ⓘ Angka, token, dan perubahan harga di atas hanya data ilustrasi untuk desain. Belum terhubung ke blockchain atau harga pasar langsung.</div>
+    </section>
+    <section id="assets" class="panel">
+      <div class="sectionhead"><h2>All assets</h2><button class="link" onclick="toast('Harga live akan ditambahkan nanti.')">Prices ↗</button></div>
+      <div class="assets">
+        <div class="asset"><div class="coin sol">◎</div><div><div class="coinname">Solana</div><div class="coinsub">SOL · Solana</div></div><div class="assetvalue">Rp 5.760.000<small>12 SOL</small></div></div>
+        <div class="asset"><div class="coin eth">◆</div><div><div class="coinname">Ethereum</div><div class="coinsub">ETH · Ethereum</div></div><div class="assetvalue">Rp 4.085.000<small>0,01 ETH</small></div></div>
+        <div class="asset"><div class="coin btc">₿</div><div><div class="coinname">Bitcoin</div><div class="coinsub">BTC · Bitcoin</div></div><div class="assetvalue">Rp 2.500.000<small>0,0002 BTC</small></div></div>
+        <div class="asset"><div class="coin usdc">$</div><div><div class="coinname">USD Coin</div><div class="coinsub">USDC · Multi-chain</div></div><div class="assetvalue">Rp 500.000<small>30 USDC</small></div></div>
+      </div>
+      <div class="note">Daftar aset ini statis. Saldo asli baru akan ditampilkan setelah koneksi alamat publik dan penyedia data blockchain.</div>
+    </section>
+    <section id="activity" class="panel">
+      <div class="sectionhead"><h2>Activity</h2></div>
+      <div class="empty"><div style="font-size:28px;margin-bottom:8px">◷</div>Belum ada transaksi.<br><br>Riwayat transaksi akan muncul setelah wallet terhubung. Tidak ada transaksi sungguhan di prototipe ini.</div>
+    </section>
+    <section id="settings" class="panel">
+      <div class="sectionhead"><h2>Settings</h2></div>
+      <div class="asset"><div class="coin sol">L</div><div><div class="coinname">Lavanda Wallet</div><div class="coinsub">Versi prototype 0.1</div></div></div>
+      <div class="asset" style="margin-top:9px"><div style="font-size:22px">🌐</div><div><div class="coinname">Jaringan</div><div class="coinsub">Solana · Ethereum · BNB Chain · Polygon (tampilan)</div></div></div>
+      <div class="note">Keamanan: jangan masukkan seed phrase atau private key ke prototipe ini. Fitur wallet asli belum aktif.</div>
+    </section>
+  </main>
+</div>
+<nav class="nav" aria-label="Navigasi utama">
+  <button class="active" data-panel="home" onclick="showPanel('home')"><span>⌂</span>Home</button>
+  <button data-panel="assets" onclick="showPanel('assets')"><span>◈</span>Assets</button>
+  <button data-panel="activity" onclick="showPanel('activity')"><span>◷</span>Activity</button>
+  <button data-panel="settings" onclick="showPanel('settings')"><span>⚙</span>Settings</button>
+</nav>
+<div id="toast" class="toast" role="status"></div>
+<script>
+let hidden=false, toastTimer;
+function toggleBalance(){hidden=!hidden;document.getElementById('amount').textContent=hidden?'••••••••':'Rp 12.845.000';document.getElementById('eye').textContent=hidden?'◎':'◉';}
+function toast(message){const el=document.getElementById('toast');el.textContent=message;el.style.display='block';clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.style.display='none',2800);}
+function showPanel(id){document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id===id));document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.panel===id));window.scrollTo({top:0,behavior:'smooth'});}
+function changeNetwork(){const n=document.getElementById('network').value;toast(n+' dipilih untuk tampilan. Belum terhubung ke blockchain.');}
+</script>
+</body>
+                                                                                           </html>
